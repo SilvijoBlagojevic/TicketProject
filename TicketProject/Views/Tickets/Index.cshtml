@@ -1,0 +1,80 @@
+﻿@model IEnumerable<TicketProject.Models.Ticket>
+
+@{
+    ViewBag.Title = "Tickets";
+}
+
+<h2>Tickets</h2>
+<div class="form-inline ">
+    <div class="col-md-6">        
+        @Html.ActionLink("Neu Ticket", "Create", null, new { @class = "btn btn-primary btn-large" })
+    </div>
+    <div class="pull-right  col-sm-6">
+        @using (Html.BeginForm("Index", "Tickets", new { @class = "form-inline" }))
+        {
+            <label class="control-labe">Suche nach Kunden: </label>
+            @Html.TextBox("searchString", "", new { @class = "form-control" })
+            <button class="btn btn-default btn-large" type="submit">Suche</button>
+        }
+    </div>
+</div>
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Erstellung)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Kategorie)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Software)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Kunde.KundeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Zustaendig)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Beschreibung)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Erstellung)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Kategorie)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Software)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Kunde.KundeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Zustaendig)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Beschreibung)
+        </td>
+        <td>
+            <div class="btn btn-block">
+                @Html.ActionLink("Update", "Edit", new { id = item.TicketID }, new { @class = "btn btn-xs btn-default" })
+                @Html.ActionLink("Löschen", "Delete", new { id = item.TicketID }, new { @class = "btn btn-xs btn-danger" })
+            </div>
+        </td>
+    </tr>
+}
+
+</table>
