@@ -2,90 +2,68 @@
 
 @{
     ViewBag.Title = "Neu";
+    Layout = null;
 }
 
+@*Dirty -> There is problem with Partial View Validations, don't work without Layout/Scripts*@
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
 <h2>Neu Ticket</h2>
 
 
-
-
-@using (Html.BeginForm("Create", "Tickets", "POST"))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "newForm" }))
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EnumDropDownListFor(model => model.Status, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(model => model.Status, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Software, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(model => model.Software, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Software, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Kategorie, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(model => model.Kategorie, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Kategorie, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Zustaendig, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(model => model.Zustaendig, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Zustaendig, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Kunde", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.KundeID, new SelectList(ViewBag.KundenList, "KundeID", "KundeName"), "Wählen Sie aus der Liste", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.KundeID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Beschreibung, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(m => m.Beschreibung, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Beschreibung, "", new { @class = "text-danger" })
+            </div>
         </div>
     </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.Software, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EnumDropDownListFor(model => model.Software, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Software, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.Kategorie, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EnumDropDownListFor(model => model.Kategorie, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Kategorie, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.Zustaendig, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EnumDropDownListFor(model => model.Zustaendig, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Zustaendig, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.Label("Kunde", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(model => model.KundeID, new SelectList(ViewBag.KundenList, "KundeID", "KundeName"), "Wählen Sie aus der Liste", new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.KundeID, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.Beschreibung, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.TextAreaFor(m => m.Beschreibung, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Beschreibung, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Speichern" class="btn btn-success" />
-        </div>
-    </div>
-</div>
 }
 
-<div>
-    @Html.ActionLink("Zurück", "Index", null, new { @class = "btn btn-primary btn-large" })
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/jqueryui")
-    @Styles.Render("~/Content/cssjqryUi")
-    <link href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
-    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
-
-    <script type="text/javascript">
-
-        $(function () {
-            $('.date-picker').datepicker();
-        })
-    </script>
-
-
-}
+    <div class="col-md-offset-2 col-md-10">
+        <button id="newTicketSpeichern" class="btn btn-success btn-large  float-left ">Speichern</button>
+    </div>

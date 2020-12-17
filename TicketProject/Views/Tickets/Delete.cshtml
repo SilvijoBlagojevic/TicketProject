@@ -2,12 +2,13 @@
 
 @{
     ViewBag.Title = "Löschen";
+    Layout = null;
 }
-
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
 
 <h3>Sind Sie sicher, dass Sie das löschen möchten?</h3>
 <hr />
-<div>
     <h4>@Html.DisplayNameFor(model => model.Kunde.KundeName): @Model.Kunde.KundeName</h4>
     <hr />
     <h4>@Html.DisplayNameFor(model => model.Kategorie): @Html.DisplayFor(model => model.Kategorie)</h4>
@@ -15,12 +16,13 @@
     <h4>@Html.DisplayNameFor(model => model.Status): @Html.DisplayFor(model => model.Status)</h4>
     <hr />
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "deleteForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.TicketID)
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Löschen" class="btn btn-danger" /> |
-            @Html.ActionLink("Zrück", "Index", null, new { @class = "btn btn-success" })
-        </div>
-    }
+}
+
+<div class="col-md-offset-2 col-md-10">
+    <button id="ticketDelete" class="btn btn-danger">Löschen</button>
 </div>

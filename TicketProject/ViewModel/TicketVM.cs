@@ -10,8 +10,6 @@ namespace TicketProject.ViewModel
     {
         public int KundeID { get; set; }
 
-        public DateTime Erstellung { get; set; }
-
         public Status Status { get; set; }
 
         public Software Software { get; set; }

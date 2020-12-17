@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -17,14 +18,28 @@ namespace TicketProject.Controllers
         private TicketProjectContext db = new TicketProjectContext();
 
         // GET: Tickets
-        public ActionResult Index(string searchString)
-        {
 
-            if (searchString != null)
-            {
-                return View(db.Tickets.Where(x => x.Kunde.KundeName.Contains(searchString)));
-            }
-            return View(db.Tickets.Include(d => d.Kunde).ToList());
+        public ActionResult Index()
+        {
+            return View();
+        }
+        public ActionResult GetTickets()
+        {
+            var tickets = db.Tickets.Include(d => d.Kunde).ToList().Select(
+                x => new
+                {
+                    x.TicketID,
+                    x.Beschreibung,
+                    Erstellung = x.Erstellung.ToString("yyyy-MM-dd HH:mm"),
+                    //enum to string
+                    Software = x.Software.ToString(),
+                    Kategorie = x.Kategorie.ToString(),
+                    KundenName = x.Kunde.KundeName.ToString(),
+                    Zustaendig = x.Zustaendig.ToString(),
+                    Status = x.Status.ToString()
+                }
+                );
+            return Json(new { data = tickets }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Tickets/Details/5
@@ -47,7 +62,7 @@ namespace TicketProject.Controllers
         {
             var ticketVM = new TicketVM();
             ViewBag.KundenList = db.Kunden;
-            return View("Create", ticketVM);
+            return PartialView("Create", ticketVM);
         }
 
         // POST: Tickets/Create
@@ -63,7 +78,6 @@ namespace TicketProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                ticketVM.Erstellung = DateTime.Now;
                 var tiket = Helper.ConvertTicketVMToTicket(ticketVM);
                 db.Tickets.Add(tiket);
 
@@ -74,15 +88,10 @@ namespace TicketProject.Controllers
                 catch (Exception ex)
                 {
                     TempData["messageError"] = string.Format("Fehler! " + ex.Message);
-                    return View("Create", ticketVM);
+                    return View("Index");
                 }
-
-                TempData["message"] = string.Format("Neu Ticket ist hinzugefügt!");
-                return RedirectToAction("Index");
-            }
-
-            TempData["message"] = string.Format("Fehler! Model ist nicht Valid!");
-            return RedirectToAction("Index");
+            }            
+            return null;
         }
 
         // GET: Tickets/Edit/5
@@ -99,7 +108,7 @@ namespace TicketProject.Controllers
             {
                 return HttpNotFound();
             }
-            return View("Edit", ticket);
+            return PartialView("Edit", ticket);
         }
 
         // POST: Tickets/Edit/5
@@ -128,14 +137,11 @@ namespace TicketProject.Controllers
                 catch (Exception ex)
                 {
                     TempData["messageError"] = string.Format("Ticket kann nicht gespeichert werden! " + ex.Message);
-                    return View("Edit", ticketView);
+                    return View("Index");
                 }
-
-                TempData["message"] = string.Format("Ticket: {0}, Kundenname: {1} ist geändert", ticketDb.TicketID, ticketDb.Kunde.KundeName);
-                return RedirectToAction("Index");
-            }
-            TempData["messageError"] = string.Format("Fehler! Model ist nicht Valid!");
-            return RedirectToAction("Index");
+             }
+            
+           return null;
         }
 
         // GET: Tickets/Delete/5
@@ -150,29 +156,27 @@ namespace TicketProject.Controllers
             {
                 return HttpNotFound();
             }
-            return View(ticket);
+            return PartialView(ticket);
         }
 
         // POST: Tickets/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int TicketID)
         {
-            Ticket ticket = db.Tickets.Find(id);
+            Ticket ticket = db.Tickets.Find(TicketID);
 
             try
             {
                 db.Tickets.Remove(ticket);
                 db.SaveChanges();
-                TempData["message"] = string.Format("Ticket: {0}, Kundenname: {1} ist gelöscht.", ticket.TicketID, ticket.Kunde.KundeName);
-
             }
             catch (Exception ex)
             {
                 TempData["messageError"] = string.Format("Fehler! " + ex.Message);
+                return View("Index");
             }
-
-            return RedirectToAction("Index");
+            return null;
         }
 
         protected override void Dispose(bool disposing)

@@ -1,4 +1,5 @@
-﻿using TicketProject.Models;
+﻿using System;
+using TicketProject.Models;
 using TicketProject.ViewModel;
 
 namespace TicketProject.Helpers
@@ -9,8 +10,8 @@ namespace TicketProject.Helpers
         {
             var ticket = new Ticket();
 
+            ticket.Erstellung = DateTime.Now;
             ticket.Beschreibung = ticketVM.Beschreibung;
-            ticket.Erstellung = ticketVM.Erstellung;
             ticket.Kategorie = ticketVM.Kategorie;
             ticket.KundeID = ticketVM.KundeID;
             ticket.Software = ticketVM.Software;
@@ -20,6 +21,7 @@ namespace TicketProject.Helpers
             return ticket;
         }
 
+        //ticketDb = ticketView don't working in EF
         public static void SetTicketToDbTicket(Ticket ticketDb, Ticket ticketView)
         {
             ticketDb.Kategorie = ticketView.Kategorie;
